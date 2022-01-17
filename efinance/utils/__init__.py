@@ -50,10 +50,7 @@ def to_numeric(func: F) -> F:
         if not re.findall('\d', str(o)):
             return o
         try:
-            if str(o).isalnum():
-                o = int(o)
-            else:
-                o = float(o)
+            o = int(o) if str(o).isalnum() else float(o)
         except:
             pass
         return o
@@ -162,8 +159,7 @@ def search_quote_locally(keyword: str) -> Union[Quote, None]:
     _q = q.copy()
     # NOTE 一定要删除它 否则会构造错误
     del _q['last_time']
-    quote = Quote(**_q)
-    return quote
+    return Quote(**_q)
 
 
 def save_search_result(keyword: str, quotes: List[Quote]):
@@ -214,9 +210,7 @@ def rename_dataframe_and_series(fields: dict,
                     for column in values.columns:
                         if column not in columns:
                             columns.append(column)
-                    values = values.rename(columns=fields)[columns]
-                else:
-                    values = values.rename(columns=fields)[columns]
+                values = values.rename(columns=fields)[columns]
                 for column in values:
                     if column in to_be_removed:
                         del values[column]

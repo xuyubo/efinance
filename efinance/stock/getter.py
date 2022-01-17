@@ -609,7 +609,7 @@ def get_top10_stock_holder_info(stock_code: str,
         url = 'https://emh5.eastmoney.com/api/GuBenGuDong/GetFirstRequest2Data'
         json_response = requests.post(
             url,  json=data).json()
-        dates = jsonpath(json_response, f'$..BaoGaoQi')
+        dates = jsonpath(json_response, '$..BaoGaoQi')
         if not dates:
             return []
         return dates
@@ -818,6 +818,7 @@ def get_all_company_performance(date: str = None) -> pd.DataFrame:
     date = f"(REPORTDATE=\'{date}\')"
     page = 1
     dfs: List[pd.DataFrame] = []
+    url = 'http://datacenter-web.eastmoney.com/api/data/get'
     while 1:
         params = (
             ('st', 'NOTICE_DATE,SECURITY_CODE'),
@@ -832,7 +833,6 @@ def get_all_company_performance(date: str = None) -> pd.DataFrame:
              f'(SECURITY_TYPE_CODE in ("058001001","058001008")){date}'),
 
         )
-        url = 'http://datacenter-web.eastmoney.com/api/data/get'
         response = session.get(url,
                                headers=EASTMONEY_REQUEST_HEADERS,
                                params=params)
@@ -842,7 +842,7 @@ def get_all_company_performance(date: str = None) -> pd.DataFrame:
         df = pd.DataFrame(items)
         dfs.append(df)
         page += 1
-    if len(dfs) == 0:
+    if not dfs:
         df = pd.DataFrame(columns=fields.values())
         return df
     df = pd.concat(dfs, axis=0, ignore_index=True)
@@ -962,7 +962,7 @@ def get_latest_holder_number(date: str = None) -> pd.DataFrame:
         df = df.rename(columns=fields)[fields.values()]
         page += 1
         dfs.append(df)
-    if len(dfs) == 0:
+    if not dfs:
         df = pd.DataFrame(columns=fields.values())
         return df
     df = pd.concat(dfs, ignore_index=True)
@@ -1052,6 +1052,8 @@ def get_daily_billboard(start_date: str = None,
     fields = EASTMONEY_STOCK_DAILY_BILL_BOARD_FIELDS
     bar: tqdm = None
 
+    url = 'http://datacenter-web.eastmoney.com/api/data/v1/get'
+
     while 1:
 
         dfs: List[pd.DataFrame] = []
@@ -1069,8 +1071,6 @@ def get_daily_billboard(start_date: str = None,
                 ('filter',
                  f"(TRADE_DATE<='{end_date}')(TRADE_DATE>='{start_date}')"),
             )
-
-            url = 'http://datacenter-web.eastmoney.com/api/data/v1/get'
 
             response = session.get(url, params=params)
             if bar is None:
@@ -1090,11 +1090,11 @@ def get_daily_billboard(start_date: str = None,
             dfs.append(df)
         if mode == 'user':
             break
-        if len(dfs) == 0:
+        if not dfs:
             start_date = start_date-timedelta(1)
             end_date = end_date-timedelta(1)
 
-        if len(dfs) > 0:
+        if dfs:
             break
     if len(dfs) == 0:
         df = pd.DataFrame(columns=fields.values())
@@ -1238,6 +1238,7 @@ def get_latest_ipo_info() -> pd.DataFrame:
     df = pd.DataFrame(columns=fields.values())
     dfs: List[pd.DataFrame] = []
     page = 1
+    url = 'http://datacenter-web.eastmoney.com/api/data/get'
     while 1:
         params = (
             ('st', 'UPDATE_DATE,SECURITY_CODE'),
@@ -1249,7 +1250,6 @@ def get_latest_ipo_info() -> pd.DataFrame:
             ('token', '894050c76af8597a853f5b408b759f5d'),
             ('client', 'WEB'),
         )
-        url = 'http://datacenter-web.eastmoney.com/api/data/get'
         json_response = requests.get(url,
                                      headers=EASTMONEY_REQUEST_HEADERS,
                                      params=params).json()
@@ -1260,7 +1260,7 @@ def get_latest_ipo_info() -> pd.DataFrame:
         df = pd.DataFrame(items).rename(
             columns=fields)[fields.values()]
         dfs.append(df)
-    if len(dfs) == 0:
+    if not dfs:
         return df
     df = pd.concat(dfs, ignore_index=True, axis=0)
     return df

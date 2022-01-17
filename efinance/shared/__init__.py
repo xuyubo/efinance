@@ -4,7 +4,7 @@ from pathlib import Path
 import requests
 import json
 session = requests.Session()
-SEARCH_RESULT_DICT: Dict[str, dict] = dict()
+SEARCH_RESULT_DICT: Dict[str, dict] = {}
 path = Path(SEARCH_RESULT_CACHE_PATH)
 if path.exists():
     load_success = False
