@@ -22,7 +22,7 @@ sys.path.insert(0, os.path.abspath('.'))
 project = 'efinance'
 copyright = '2021, micro sheep'
 author = 'micro sheep'
-version_info = dict()
+version_info = {}
 exec((here/'../efinance/__version__.py').read_text(), version_info)
 # The full version, including alpha/beta/rc tags
 release = version_info['__version__']

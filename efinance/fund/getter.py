@@ -90,8 +90,7 @@ def get_quote_history(fund_code: str,
             '累计净值': stock['LJJZ'],
             '涨跌幅': stock['JZZZL']
         })
-    df = pd.DataFrame(rows)
-    return df
+    return pd.DataFrame(rows)
 
 
 @retry(tries=3)
@@ -238,8 +237,7 @@ def get_fund_codes(ft: str = None) -> pd.DataFrame:
 
     columns = ['基金代码', '基金简称']
     results = re.findall('"(\d{6}),(.*?),', response.text)
-    df = pd.DataFrame(results, columns=columns)
-    return df
+    return pd.DataFrame(results, columns=columns)
 
 
 @retry(tries=3)

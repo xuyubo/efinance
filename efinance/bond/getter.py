@@ -163,6 +163,7 @@ def get_all_base_info() -> pd.DataFrame:
     page = 1
     dfs: List[pd.DataFrame] = []
     columns = EASTMONEY_BOND_BASE_INFO_FIELDS
+    url = 'http://datacenter-web.eastmoney.com/api/data/v1/get'
     while 1:
         params = (
             ('sortColumns', 'PUBLIC_START_DATE'),
@@ -175,7 +176,6 @@ def get_all_base_info() -> pd.DataFrame:
             ('client', 'WEB'),
         )
 
-        url = 'http://datacenter-web.eastmoney.com/api/data/v1/get'
         json_response = requests.get(url,
                                      headers=EASTMONEY_REQUEST_HEADERS,
                                      params=params).json()

@@ -67,10 +67,7 @@ def get_quote_history_single(code: str,
     fields = list(EASTMONEY_KLINE_FIELDS.keys())
     columns = list(EASTMONEY_KLINE_FIELDS.values())
     fields2 = ",".join(fields)
-    if kwargs.get('quote_id_mode'):
-        quote_id = code
-    else:
-        quote_id = get_quote_id(code)
+    quote_id = code if kwargs.get('quote_id_mode') else get_quote_id(code)
     params = (
         ('fields1', 'f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13'),
         ('fields2', fields2),
